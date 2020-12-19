@@ -19,7 +19,6 @@ class CreateFoodRecipesTable extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->integer('points')->default(0);
-            $table->integer('number_of_comments')->default(0);
             $table->string('category');
             $table->string('cuisine_country');
             $table->boolean('vegetarian');

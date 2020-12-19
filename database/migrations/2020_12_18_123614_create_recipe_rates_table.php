@@ -16,11 +16,11 @@ class CreateRecipeRatesTable extends Migration
         Schema::create('recipe_rates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('recipe_id');
+            $table->unsignedBigInteger('food_recipe_id');
             $table->integer('rating');
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('recipe_id')->references('id')->on('food_recipes')->onDelete('CASCADE');
+            $table->foreign('food_recipe_id')->references('id')->on('food_recipes')->onDelete('CASCADE');
         });
     }
 
