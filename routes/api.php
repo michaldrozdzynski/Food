@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/foodporn', 'FoodpornController@index');
+Route::post('/foodporn', 'FoodpornController@store');
+Route::put('/foodporn/{id}/good', 'FoodpornController@good');
+Route::put('/foodporn/{id}/bad', 'FoodpornController@bad');
+Route::delete('/foodporn/{id}', 'FoodpornController@destroy');

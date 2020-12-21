@@ -18,6 +18,7 @@ class CreateRecipeRatesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('food_recipe_id');
             $table->integer('rating');
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('food_recipe_id')->references('id')->on('food_recipes')->onDelete('CASCADE');

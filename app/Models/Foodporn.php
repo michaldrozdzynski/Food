@@ -30,5 +30,29 @@ class Foodporn extends Model
     {
         return $this->belongsTo(User::class);
     }
-     
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function foodpornRates()//: HasMany
+    {
+        return $this->hasMany(FoodpornRate::class);
+    }
+
+    public function scopeWithUserName($query) {
+        return $query->addSelect([
+            'user_name' => function ($query) {
+                $query->select('name')
+                    ->from('users')
+                    ->whereColumn('foodporns.user_id', 'users.id')
+                    ->limit(1);
+            }
+        ]);
+    }
+
+    public function scopeRates($query, $user) {
+        return $query->whereHas('foodpornRates', function($query) use ($user) {
+            $query->where('user_id', '!=', $user->id);
+        });
+    }
 }

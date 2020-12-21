@@ -18,7 +18,8 @@ class CreateFoodpornRatesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('foodporn_id');
             $table->integer('rating');
-
+            $table->timestamps();
+            
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('foodporn_id')->references('id')->on('foodporns')->onDelete('CASCADE');
         });
