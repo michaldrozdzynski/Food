@@ -18,7 +18,8 @@ class CreateCommentRatesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('comment_id');
             $table->integer('rating');
-
+            $table->timestamps();
+            
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('comment_id')->references('id')->on('comments')->onDelete('CASCADE');
         });
