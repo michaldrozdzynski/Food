@@ -12,6 +12,23 @@ class FoodRecipe extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'Id',
+        'user_id',
+        'name',
+        'image',
+        'points',
+        'category',
+        'cuisine_country',
+        'vegetarian',
+        'description',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
@@ -33,5 +50,10 @@ class FoodRecipe extends Model
     public function ingredients(): HasMany
     {
         return $this->hasMany(Ingredient::class);
+    }
+
+    public function rates(): HasMany
+    {
+        return $this->hasMany(RecipeRate::class);
     }
 }
