@@ -16,6 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/foodporn', 'FoodpornController@index');
 Route::post('/foodporn', 'FoodpornController@store');
-Route::put('/foodporn/{id}/good', 'FoodpornController@good');
-Route::put('/foodporn/{id}/bad', 'FoodpornController@bad');
+Route::patch('/foodporn/{id}/good', 'FoodpornController@good');
+Route::patch('/foodporn/{id}/bad', 'FoodpornController@bad');
 Route::delete('/foodporn/{id}', 'FoodpornController@destroy');
+
+Route::get('/foodrecipe', 'FoodRecipeController@index');
+Route::post('/foodrecipe', 'FoodRecipeController@store');
+Route::get('/foodrecipe/{id}', 'FoodRecipeController@show');
+Route::patch('/foodrecipe/{id}/good', 'FoodRecipeController@good');
+Route::patch('/foodrecipe/{id}/bad', 'FoodRecipeController@bad');
+Route::put('/foodrecipe/{id}', 'FoodRecipeController@update');
