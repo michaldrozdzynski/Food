@@ -24,6 +24,7 @@ class FoodRecipeRepository
                 'cuisine_country',
                 'vegetarian',
             ])
+            ->orderBy('updated_at', 'DESC')
             ->get();
     }
 
