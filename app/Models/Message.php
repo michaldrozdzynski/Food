@@ -18,17 +18,10 @@ class Message extends Model
     protected $fillable = [
         'Id',
         'conversation_id',
-        'message',
+        'content',
         'user_id',
         'send_time',
     ];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

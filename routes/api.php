@@ -31,3 +31,8 @@ Route::get('/comment/{recipeId}', 'CommentController@index');
 Route::post('/comment', 'CommentController@store');
 Route::patch('/comment/{comment}/good', 'CommentController@good');
 Route::patch('/comment/{comment}/bad', 'CommentController@bad');
+
+Route::get('/conversation', 'ConversationController@index');
+Route::post('/conversation/{user}', 'ConversationController@store');
+Route::get('/conversation/{conversation}', 'ConversationController@show');
+Route::post('/conversation/{conversation}/send', 'ConversationController@send');
