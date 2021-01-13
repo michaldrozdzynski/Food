@@ -26,6 +26,7 @@ Route::get('/foodrecipe/{id}', 'FoodRecipeController@show');
 Route::patch('/foodrecipe/{id}/good', 'FoodRecipeController@good');
 Route::patch('/foodrecipe/{id}/bad', 'FoodRecipeController@bad');
 Route::put('/foodrecipe/{id}', 'FoodRecipeController@update');
+Route::delete('/foodrecipe/{recipe}', 'FoodRecipeController@destroy');
 
 Route::get('/comment/{recipeId}', 'CommentController@index');
 Route::post('/comment', 'CommentController@store');

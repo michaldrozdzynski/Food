@@ -25,7 +25,13 @@ class FoodpornController extends Controller
 
     public function store(StoreFoodporn $request): JsonResponse
     {   
-        return response()->json($this->foodporns->store($request->validated()));
+        $data = [
+            'image' => $request->file('image')->store('images/foodporn'),
+            'user_id' => Auth::user()->id,
+            'name' => $request->name,
+        ];
+
+        return response()->json($this->foodporns->store($data));
     }
 
     public function good(int $id): JsonResponse

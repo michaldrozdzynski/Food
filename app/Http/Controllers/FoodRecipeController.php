@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\FoodRecipeRepository;
 use App\Http\Requests\StoreFoodRecipe;
+use App\Models\FoodRecipe;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -23,7 +24,10 @@ class FoodRecipeController extends Controller
 
     public function store(StoreFoodRecipe $request): JsonResponse
     {
-        return response()->json($this->foodRecipes->store($request->validated()));
+        $data = $request->validated();
+        $data['image'] = $request->file('image')->store('images/foodrecipe');
+
+        return response()->json($this->foodRecipes->store($data));
     }
 
     public function show(int $id): JsonResponse
@@ -43,7 +47,15 @@ class FoodRecipeController extends Controller
 
     public function update(StoreFoodRecipe $request, int $id): JsonResponse
     {
-        return response()->json($this->foodRecipes->update($request->validated(), $id));
+        $data = $request->validated();
+        $data['image'] = $request->file('image')->store('images/foodrecipe');
+
+        return response()->json($this->foodRecipes->update($data, $id));
+    }
+
+    public function destroy(FoodRecipe $recipe): JsonResponse
+    {
+        return response()->json($this->foodRecipes->delete($recipe));
     }
 
 }

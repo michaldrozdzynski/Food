@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
+use Auth;
 use App\Models\Foodporn;
 use App\Models\FoodpornRate;
 use App\Models\User;
+use Storage;
 
 /**
  * Class FoodpornRepository
@@ -37,7 +39,7 @@ class FoodpornRepository
             return null;
     }
 
-    public function store(array $data): Foodporn
+    public function store(array $data)//: Foodporn
     {
         return Foodporn::create($data);
     }
@@ -85,6 +87,10 @@ class FoodpornRepository
     public function delete(Foodporn $foodporn, User $user): string
     {
         if ($foodporn->user_id === $user->id) {
+            $filename = $foodporn->image;
+
+            Storage::delete($filename);
+
             $foodporn->delete();
 
             return 'Success. You have deleted this photo.';
