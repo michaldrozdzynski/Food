@@ -24,9 +24,8 @@ class CreateCommentsTable extends Migration
             $table->softDeletes();
             
             $table->foreign('food_recipe_id')->references('id')->on('food_recipes')->onDelete('CASCADE');
-            $table->foreign('parent_id')->references('id')->on('comments');
-            $table->foreign('user_id')->references('id')->on('users');
-            
+            $table->foreign('parent_id')->references('id')->on('comments')->onDelete('CASCADE');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');;    
         });
     }
 

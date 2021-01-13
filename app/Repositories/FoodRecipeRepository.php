@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\FoodRecipe;
+use App\Models\Comment;
 use Auth;
+use Storage;
 
 /**
  * Class FoodRecipeRepository
@@ -24,7 +26,7 @@ class FoodRecipeRepository
                 'cuisine_country',
                 'vegetarian',
             ])
-            ->orderBy('updated_at', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get();
     }
 
@@ -33,11 +35,13 @@ class FoodRecipeRepository
         $recipeData = [
             'user_id' => Auth::user()->id,
             'name' => $data['name'],
+            'image' => $data['image'],
             'category' => $data['category'],
             'cuisine_country' => $data['cuisine_country'],
             'vegetarian' => $data['vegetarian'],
             'description' => $data['description'],
         ];
+
         $ingredients = $data['ingredient'];
 
         $foodRecipe = FoodRecipe::create($recipeData);
@@ -124,6 +128,10 @@ class FoodRecipeRepository
             return "Unautorizate";
         }
 
+        $filename = $foodRecipe->image;
+
+        Storage::delete($filename);
+
         $recipeData = [
             'user_id' => Auth::user()->id,
             'name' => $data['name'],
@@ -131,6 +139,7 @@ class FoodRecipeRepository
             'cuisine_country' => $data['cuisine_country'],
             'vegetarian' => $data['vegetarian'],
             'description' => $data['description'],
+            'image' => $data['image'],
         ];
 
         $foodRecipe->update($recipeData);
@@ -155,6 +164,22 @@ class FoodRecipeRepository
         ];
 
         return $recipe;
+    }
+
+    public function delete(FoodRecipe $recipe) {
+        $user = Auth::user();
+
+        if ($recipe->user_id === $user->id) {
+            $filename = $recipe->image;
+            
+            Storage::delete($filename);
+
+            $recipe->delete();
+
+            return 'Success. You have deleted this recipe.';
+        }
+
+        return "You cannot delete this.";
     }
 
 }

@@ -14,9 +14,8 @@ class StoreFoodporn extends FormRequest
     public function rules()
     {
         return [
-           'user_id' => 'required|integer|exists:users,id',
            'name' => 'required|string',
-           'image' => 'required|string',
+           'image' => 'required|mimes:jpg,bmp,png',
         ];
     }
 }
