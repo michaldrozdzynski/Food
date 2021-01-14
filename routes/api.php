@@ -40,3 +40,6 @@ Route::middleware([AuthBasic::class])->group(function () {
     Route::get('/conversation/{conversation}', 'ConversationController@show');
     Route::post('/conversation/{conversation}/send', 'ConversationController@send');
 });
+
+Route::post('/register', 'UserController@register');
+Route::post('/login', 'UserController@login');
