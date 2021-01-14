@@ -15,7 +15,7 @@ use App\Http\Middleware\AuthBasic;
 |
 */
 
-Route::middleware([AuthBasic::class])->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::get('/foodporn', 'FoodpornController@index');
     Route::post('/foodporn', 'FoodpornController@store');
     Route::patch('/foodporn/{id}/good', 'FoodpornController@good');
@@ -39,6 +39,8 @@ Route::middleware([AuthBasic::class])->group(function () {
     Route::post('/conversation/{user}', 'ConversationController@store');
     Route::get('/conversation/{conversation}', 'ConversationController@show');
     Route::post('/conversation/{conversation}/send', 'ConversationController@send');
+
+    Route::get('/logout', 'UserController@logout');
 });
 
 Route::post('/register', 'UserController@register');
