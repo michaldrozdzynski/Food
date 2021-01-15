@@ -17,15 +17,9 @@ class CreateCuisineCountriesTable extends Migration
             $table->id();
             $table->string('name')->unique();
         });
-    }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('cuisine_countries');
+        Schema::table('food_recipes', function (Blueprint $table) {
+            $table->foreign('cuisine_country_id')->references('id')->on('cuisine_countries');
+        });
     }
 }

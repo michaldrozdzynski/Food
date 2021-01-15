@@ -19,13 +19,11 @@ class CreateFoodRecipesTable extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->integer('points')->default(0);
-            $table->string('category');
-            $table->string('cuisine_country');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('cuisine_country_id');
             $table->boolean('vegetarian');
             $table->text('description');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\FoodRecipe;
 use App\Models\User;
+use App\Models\FoodCategory;
+use App\Models\CuisineCountry;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FoodRecipeFactory extends Factory
@@ -24,11 +26,15 @@ class FoodRecipeFactory extends Factory
     {
         $user = User::InRandomOrder()->first();
 
+        $category = FoodCategory::inRandomOrder()->first();
+
+        $country = CuisineCountry::inRandomOrder()->first();
+
         return [
             'user_id' => $user->id,
             'name' => $this->faker->word,
-            'category' => $this->faker->word,
-            'cuisine_country' => $this->faker->country,
+            'category_id' => $category->id,
+            'cuisine_country_id' => $country->id,
             'vegetarian' => $this->faker->boolean,
             'description' => $this->faker->text,
         ];

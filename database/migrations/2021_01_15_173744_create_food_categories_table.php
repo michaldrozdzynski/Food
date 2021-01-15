@@ -17,15 +17,9 @@ class CreateFoodCategoriesTable extends Migration
             $table->id();
             $table->string('name')->unique();
         });
-    }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('food_categories');
+        Schema::table('food_recipes', function (Blueprint $table) {
+            $table->foreign('category_id')->references('id')->on('food_categories');
+        });
     }
 }
