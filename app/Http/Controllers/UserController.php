@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\RegisterUser;
+use App\Http\Requests\UpdateUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Auth;
+use Storage;
 
 class UserController extends Controller
 {
@@ -50,11 +52,36 @@ class UserController extends Controller
         ]);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request): JsonResponse
+    {
         $request->user()->token()->revoke();
 
         return response()->json([
             'message' => 'Succesfully logget out'
         ]);
+    }
+
+    public function update(UpdateUser $request): JsonResponse
+    {
+        $data = $request->validated();
+        $user = Auth::user();
+
+        if (isset($data['avatar'])) {
+            $data['avatar'] = $request->file('avatar')->store('images/avatar');
+
+            if (isset($user->avatar)) {
+                Storage::delete($user->avatar);
+            }
+        }
+
+        
+        $user->update($data);
+
+        return response()->json($user);
+    }
+
+    public function show(User $user): JsonResponse
+    {
+        return response()->json($user);
     }
 }
