@@ -40,6 +40,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/conversation/{conversation}', 'ConversationController@show');
     Route::post('/conversation/{conversation}/send', 'ConversationController@send');
 
+    Route::get('/foodcategory', 'CategoryAndCuisineController@getCategory');
+    Route::get('/cuisine-country', 'CategoryAndCuisineController@getCuisineCountry');
+
     Route::get('/user/{user}', 'UserController@show');
     Route::put('/user', 'UserController@update');
 
