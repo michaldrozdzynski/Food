@@ -57,4 +57,20 @@ class Comment extends Model
     {
         return $this->belongsTo(Comment::class, 'parent_id');
     }
+
+    public function rates(): HasMany
+    {
+        return $this->hasMany(CommentRate::class);
+    }
+
+    public function scopeWithUserName($query) {
+        return $query->addSelect([
+            'user_name' => function ($query) {
+                $query->select('name')
+                    ->from('users')
+                    ->whereColumn('comments.user_id', 'users.id')
+                    ->limit(1);
+            }
+        ]);
+    }
 }

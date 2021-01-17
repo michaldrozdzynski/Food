@@ -30,11 +30,15 @@ class ConversationController extends Controller
 
     public function show(Conversation $conversation): JsonResponse
     {
+        $this->authorize('view', $conversation);
+
         return response()->json($this->conversations->show($conversation));
     }
 
     public function send(Conversation $conversation, SendMessage $request)
     {
-        return response()->json($this->conversations->send($conversation, $request->content));
+        $this->authorize('send', $conversation);
+
+        return response()->json($this->conversations->send($conversation, $request->content), 201);
     }
 }

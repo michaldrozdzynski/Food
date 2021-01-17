@@ -30,6 +30,10 @@ class FoodRecipeRepository
         if (isset($data['cuisine_country_id'])) {
             $foodporn = $foodporn->where('cuisine_country_id', $data['cuisine_country_id']);
         } 
+
+        if (isset($data['user_id'])) {
+            $foodporn = $foodporn->where('user_id', $data['user_id']);
+        } 
         
         return $foodporn->get();
     }
@@ -62,76 +66,52 @@ class FoodRecipeRepository
         }    
 
         $recipe = [
-            $foodRecipe,
-            $recipeIngredients,
+            'foodRecipe' => $foodRecipe,
+            'ingredients' => $recipeIngredients,
         ];
 
         return $recipe;
     }
 
-    public function getOne(int $id)
+    public function getOne(FoodRecipe $foodRecipe)
     {
-        $foodRecipe = FoodRecipe::find($id);
         $recipeIngredients = $foodRecipe->ingredients()->get(); 
 
         $recipe = [
-            $foodRecipe,
-            $recipeIngredients,
+            'foodRecipe' => $foodRecipe,
+            'ingredients' => $recipeIngredients,
         ];
 
         return $recipe;
     }
 
-    public function plus(int $id)
+    public function plus(FoodRecipe $foodRecipe)
     {
-        $foodRecipe = FoodRecipe::find($id);
-        $user = Auth::user();
-        if ($foodRecipe->rates()->where('user_id', $user->id)->count() > 0) {
-            return "You rated this recipe before.";
-        } else if ($foodRecipe->user_id === $user->id) {
-            return "You cannot rate yours recipe.";
-        } else {
-            $foodRecipe->increment('points');
-            $foodRecipe->save();
+        $foodRecipe->increment('points');
+        $foodRecipe->save();
 
-            $foodRecipe->rates()->create([
-                'user_id' => $user->id,
-                'rating' => 1,
-            ]);
+        $foodRecipe->rates()->create([
+            'user_id' => Auth::user()->id,
+            'rating' => 1,
+        ]);
 
-            return $foodRecipe;
-        }
+        return $foodRecipe;
     }
 
-    public function minus(int $id)
+    public function minus(FoodRecipe $foodRecipe)
     {
-        $foodRecipe = FoodRecipe::find($id);
-        $user = Auth::user();
+        $foodRecipe->decrement('points');
+        $foodRecipe->save();
 
-        if ($foodRecipe->rates()->where('user_id', $user->id)->count() > 0) {
-            return "You rated this recipe before.";
-        } else if ($foodRecipe->user_id === $user->id) {
-            return "You cannot rate yours recipe.";
-        } else {
-            $foodRecipe->decrement('points');
-            $foodRecipe->save();
+        $foodRecipe->rates()->create([
+            'user_id' => Auth::user()->id,
+            'rating' => -1,
+        ]);
 
-            $foodRecipe->rates()->create([
-                'user_id' => $user->id,
-                'rating' => -1,
-            ]);
-
-            return $foodRecipe;
-        }
+        return $foodRecipe;
     }
 
-    public function update(array $data, int $id) {
-        $foodRecipe = FoodRecipe::find($id);
-
-        if ($foodRecipe->user_id != Auth::user()->id) {
-            return "Unautorizate";
-        }
-
+    public function update(array $data, FoodRecipe $foodRecipe) {
         $filename = $foodRecipe->image;
 
         Storage::delete($filename);
@@ -153,6 +133,7 @@ class FoodRecipeRepository
 
         $recipeIngredients = [];
         $number = 1;
+
         foreach($ingredients as $ingredient) {
             array_push($recipeIngredients, $foodRecipe->ingredients()->create([
                 'number' => $number,
@@ -163,27 +144,21 @@ class FoodRecipeRepository
         }    
 
         $recipe = [
-            $foodRecipe,
-            $recipeIngredients,
+            'foodRecipe' => $foodRecipe,
+            'ingredients' => $recipeIngredients,
         ];
 
         return $recipe;
     }
 
     public function delete(FoodRecipe $recipe) {
-        $user = Auth::user();
+        $filename = $recipe->image;
+        
+        Storage::delete($filename);
 
-        if ($recipe->user_id === $user->id) {
-            $filename = $recipe->image;
-            
-            Storage::delete($filename);
+        $recipe->delete();
 
-            $recipe->delete();
-
-            return 'Success. You have deleted this recipe.';
-        }
-
-        return "You cannot delete this.";
+        return 'Success. You have deleted this recipe.';
     }
 
 }
