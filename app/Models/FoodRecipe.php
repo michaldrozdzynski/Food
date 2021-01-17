@@ -22,8 +22,8 @@ class FoodRecipe extends Model
         'name',
         'image',
         'points',
-        'category',
-        'cuisine_country',
+        'category_id',
+        'cuisine_country_id',
         'vegetarian',
         'description',
     ];
@@ -55,5 +55,28 @@ class FoodRecipe extends Model
     public function rates(): HasMany
     {
         return $this->hasMany(RecipeRate::class);
+    }
+
+    public function scopeWithCategoryAndCuisineCountryAndUser($query) {
+        return $query->addSelect([
+            'category' => function ($query) {
+                $query->select('name')
+                    ->from('food_categories')
+                    ->whereColumn('food_recipes.category_id', 'food_categories.id')
+                    ->limit(1);
+            },
+            'cuisine_country' => function ($query) {
+                $query->select('name')
+                    ->from('cuisine_countries')
+                    ->whereColumn('food_recipes.cuisine_country_id', 'cuisine_countries.id')
+                    ->limit(1);
+            },
+            'user_name' => function ($query) {
+                $query->select('name')
+                    ->from('users')
+                    ->whereColumn('food_recipes.user_id', 'users.id')
+                    ->limit(1);
+            }
+        ]);
     }
 }

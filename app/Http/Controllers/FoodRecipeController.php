@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\FoodRecipeRepository;
 use App\Http\Requests\StoreFoodRecipe;
+use App\Http\Requests\FilterRecipe;
 use App\Models\FoodRecipe;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -17,9 +18,11 @@ class FoodRecipeController extends Controller
         $this->foodRecipes = $foodRecipeRepository;
     }
 
-    public function index(): JsonResponse
+    public function index(FilterRecipe $request): JsonResponse
     {
-        return response()->json($this->foodRecipes->getAll());
+        $data = $request->validated();
+
+        return response()->json($this->foodRecipes->getAll($data));
     }
 
     public function store(StoreFoodRecipe $request): JsonResponse
