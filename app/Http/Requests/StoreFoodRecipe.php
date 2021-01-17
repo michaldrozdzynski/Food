@@ -16,8 +16,8 @@ class StoreFoodRecipe extends FormRequest
         return [
             'name' => 'required|string',
             'image' => 'required|mimes:jpg,bmp,png',
-            'category' => 'required|string',
-            'cuisine_country' => 'required|string',
+            'category_id' => 'required|integer|exists:food_categories,id',
+            'cuisine_country_id' => 'required|integer|exists:cuisine_countries,id',
             'vegetarian' => 'required|boolean',
             'description' => 'required|string',
             'ingredient' => 'required|array',

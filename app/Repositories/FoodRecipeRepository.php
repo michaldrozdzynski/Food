@@ -14,20 +14,24 @@ use Storage;
  */ 
 class FoodRecipeRepository
 {
-    public function getAll()
+    public function getAll(array $data)
     {
-        return FoodRecipe::select([
-                'Id',
-                'user_id',
-                'name',
-                'image',
-                'points',
-                'category',
-                'cuisine_country',
-                'vegetarian',
-            ])
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $foodporn =  FoodRecipe::withCategoryAndCuisineCountryAndUser()
+            ->orderBy('created_at', 'DESC');
+
+        if (isset($data['vegetarian'])) {
+            $foodporn = $foodporn->where('vegetarian', $data['vegetarian']);
+        } 
+
+        if (isset($data['category_id'])) {
+            $foodporn = $foodporn->where('category_id', $data['category_id']);
+        } 
+
+        if (isset($data['cuisine_country_id'])) {
+            $foodporn = $foodporn->where('cuisine_country_id', $data['cuisine_country_id']);
+        } 
+        
+        return $foodporn->get();
     }
 
     public function store(array $data)
@@ -36,8 +40,8 @@ class FoodRecipeRepository
             'user_id' => Auth::user()->id,
             'name' => $data['name'],
             'image' => $data['image'],
-            'category' => $data['category'],
-            'cuisine_country' => $data['cuisine_country'],
+            'category_id' => $data['category_id'],
+            'cuisine_country_id' => $data['cuisine_country_id'],
             'vegetarian' => $data['vegetarian'],
             'description' => $data['description'],
         ];
@@ -135,8 +139,8 @@ class FoodRecipeRepository
         $recipeData = [
             'user_id' => Auth::user()->id,
             'name' => $data['name'],
-            'category' => $data['category'],
-            'cuisine_country' => $data['cuisine_country'],
+            'category_id' => $data['category_id'],
+            'cuisine_country_id' => $data['cuisine_country_id'],
             'vegetarian' => $data['vegetarian'],
             'description' => $data['description'],
             'image' => $data['image'],
