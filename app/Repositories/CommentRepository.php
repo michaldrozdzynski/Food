@@ -14,14 +14,39 @@ use Auth;
  */ 
 class CommentRepository
 {
-    public function get(int $id)
+    public function get(FoodRecipe $foodRecipe)
     {
-        return Comment::where('food_recipe_id', $id)->get();
+        $comments = $foodRecipe->comments()
+            ->select([
+                'id',
+                'food_recipe_id',
+                'user_id',
+                'content',
+                'points',
+                'created_at',
+            ])
+            ->withUserName()
+            ->get();
+        
+        $deletedComments = $foodRecipe->comments()
+            ->onlyTrashed()
+            ->select([
+                'id',
+                'food_recipe_id',
+                'deleted_at',
+            ])
+            ->get();
+
+        return [
+            'comments' => $comments,
+            'deletedComments' => $deletedComments,
+        ];
     }
 
     public function store(array $data)
     {
         $foodRecipe = FoodRecipe::find($data['food_recipe_id']);
+
         if (isset($data['parent_id']) && $foodRecipe->comments()->find($data['parent_id']) === null) {
             return response()->json([
                 'message' => "The given data was invalid.",
@@ -30,58 +55,50 @@ class CommentRepository
                 ], 
             ],422);
         }
+        
         $commentData = [
             'user_id' => Auth::user()->id,
             'content' => $data['content'],
             'parent_id' => $data['parent_id'] ?? null,
         ];
 
-        return response()->json($foodRecipe->comments()->create($commentData),201);
+        return response()->json($foodRecipe->comments()->create($commentData), 201);
     }
 
-    public function plus(int $id)
+    public function plus(Comment $comment)
     {
         $user = Auth::user();
-        $comment = Comment::find($id);
 
-        if ($user->id == $comment->user_id) {
-            return "You cannot rate yours comments.";
-        } else if (CommentRate::where('comment_id', $comment->id)->where('user_id', $user->id)->count()) {
-            return "You rated this comment before.";
-        } else {
-            $comment->increment('points');
-            $comment->save();
+        $comment->increment('points');
+        $comment->save();
 
-            CommentRate::create([
-                'user_id' => $user->id,
-                'comment_id' => $comment->id,
-                'rating' => 1,
-            ]);
+        $comment->rates()->create([
+            'user_id' => $user->id,
+            'rating' => 1,
+        ]);
 
-            return $comment;
-        }
+        return $comment;
     }
 
-    public function minus(int $id)
+    public function minus(Comment $comment)
     {
         $user = Auth::user();
-        $comment = Comment::find($id);
 
-        if ($user->id == $comment->user_id) {
-            return "You cannot rate yours comments.";
-        } else if (CommentRate::where('comment_id', $comment->id)->where('user_id', $user->id)->count()) {
-            return "You rated this comment before.";
-        } else {
-            $comment->decrement('points');
-            $comment->save();
+        $comment->decrement('points');
+        $comment->save();
 
-            CommentRate::create([
-                'user_id' => $user->id,
-                'comment_id' => $comment->id,
-                'rating' => -1,
-            ]);
+        $comment->rates()->create([
+            'user_id' => $user->id,
+            'rating' => -1,
+        ]);
 
-            return $comment;
-        }
+        return $comment;
+    }
+
+    public function delete(Comment $comment)
+    {
+        $comment->delete();
+
+        return 'Success. You have deleted this comment.';
     }
 }

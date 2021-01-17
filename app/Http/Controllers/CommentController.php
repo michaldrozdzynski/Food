@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\CommentRepository;
 use App\Http\Requests\StoreComment;
 use App\Models\Comment;
+use App\Models\FoodRecipe;
 use Illuminate\Http\JsonResponse;
 
 class CommentController extends Controller
@@ -16,9 +17,9 @@ class CommentController extends Controller
         $this->comments = $commentRepository;
     }
 
-    public function index(int $id): JsonResponse
+    public function index(FoodRecipe $recipe): JsonResponse
     {   
-        return response()->json($this->comments->get($id));
+        return response()->json($this->comments->get($recipe));
     }
 
     public function store(StoreComment $request): JsonResponse
@@ -28,11 +29,22 @@ class CommentController extends Controller
 
     public function good(Comment $comment): JsonResponse
     {
-        return response()->json($this->comments->plus($comment->id));
+        $this->authorize('rate', $comment);
+
+        return response()->json($this->comments->plus($comment));
     }
 
     public function bad(Comment $comment): JsonResponse
     {
-        return response()->json($this->comments->minus($comment->id));
+        $this->authorize('rate', $comment);
+
+        return response()->json($this->comments->minus($comment));
+    }
+
+    public function destroy(Comment $comment): JsonResponse
+    {
+        $this->authorize('delete', $comment);
+
+        return response()->json($this->comments->delete($comment), 204); 
     }
 }

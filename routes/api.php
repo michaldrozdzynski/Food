@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\AuthBasic;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,30 +16,31 @@ use App\Http\Middleware\AuthBasic;
 Route::middleware('auth:api')->group(function () {
     Route::get('/foodporn', 'FoodpornController@index');
     Route::post('/foodporn', 'FoodpornController@store');
-    Route::patch('/foodporn/{id}/good', 'FoodpornController@good');
-    Route::patch('/foodporn/{id}/bad', 'FoodpornController@bad');
-    Route::delete('/foodporn/{id}', 'FoodpornController@destroy');
+    Route::patch('/foodporn/{foodporn}/good', 'FoodpornController@good');
+    Route::patch('/foodporn/{foodporn}/bad', 'FoodpornController@bad');
+    Route::delete('/foodporn/{foodporn}', 'FoodpornController@destroy');
 
-    Route::get('/foodrecipe', 'FoodRecipeController@index');
+    Route::get('/foodrecipe', 'FoodRecipeController@index')->withoutMiddleware('auth:api');
     Route::post('/foodrecipe', 'FoodRecipeController@store');
-    Route::get('/foodrecipe/{id}', 'FoodRecipeController@show');
-    Route::patch('/foodrecipe/{id}/good', 'FoodRecipeController@good');
-    Route::patch('/foodrecipe/{id}/bad', 'FoodRecipeController@bad');
-    Route::put('/foodrecipe/{id}', 'FoodRecipeController@update');
+    Route::get('/foodrecipe/{recipe}', 'FoodRecipeController@show')->withoutMiddleware('auth:api');
+    Route::patch('/foodrecipe/{recipe}/good', 'FoodRecipeController@good');
+    Route::patch('/foodrecipe/{recipe}/bad', 'FoodRecipeController@bad');
+    Route::put('/foodrecipe/{recipe}', 'FoodRecipeController@update');
     Route::delete('/foodrecipe/{recipe}', 'FoodRecipeController@destroy');
 
-    Route::get('/comment/{recipeId}', 'CommentController@index');
+    Route::get('/comment/{recipe}', 'CommentController@index')->withoutMiddleware('auth:api');
     Route::post('/comment', 'CommentController@store');
     Route::patch('/comment/{comment}/good', 'CommentController@good');
     Route::patch('/comment/{comment}/bad', 'CommentController@bad');
+    Route::delete('/comment/{comment}', 'CommentController@destroy');
 
     Route::get('/conversation', 'ConversationController@index');
     Route::post('/conversation/{user}', 'ConversationController@store');
     Route::get('/conversation/{conversation}', 'ConversationController@show');
     Route::post('/conversation/{conversation}/send', 'ConversationController@send');
 
-    Route::get('/foodcategory', 'CategoryAndCuisineController@getCategory');
-    Route::get('/cuisine-country', 'CategoryAndCuisineController@getCuisineCountry');
+    Route::get('/foodcategory', 'CategoryAndCuisineController@getCategory')->withoutMiddleware('auth:api');
+    Route::get('/cuisine-country', 'CategoryAndCuisineController@getCuisineCountry')->withoutMiddleware('auth:api');
 
     Route::get('/user/{user}', 'UserController@show');
     Route::put('/user', 'UserController@update');

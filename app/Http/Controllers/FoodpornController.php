@@ -31,27 +31,27 @@ class FoodpornController extends Controller
             'name' => $request->name,
         ];
 
-        return response()->json($this->foodporns->store($data));
+        return response()->json($this->foodporns->store($data), 201);
     }
 
-    public function good(int $id): JsonResponse
+    public function good(Foodporn $foodporn): JsonResponse
     {
-        $foodporn = Foodporn::find($id);
+        $this->authorize('rate', $foodporn);
 
-        return response()->json($this->foodporns->plus($foodporn, Auth::user()));
+        return $this->foodporns->plus($foodporn, Auth::user());
     }
 
-    public function bad(int $id): JsonResponse
+    public function bad(Foodporn $foodporn): JsonResponse
     {
-        $foodporn = Foodporn::find($id);
+        $this->authorize('rate', $foodporn);
 
-        return response()->json($this->foodporns->minus($foodporn, Auth::user()));
+        return $this->foodporns->minus($foodporn, Auth::user());
     }
     
-    public function destroy(int $id): JsonResponse
-    {
-        $foodporn = Foodporn::find($id);
-        
-        return response()->json($this->foodporns->delete($foodporn, Auth::user()));
+    public function destroy(Foodporn $foodporn): JsonResponse
+    { 
+        $this->authorize('delete', $foodporn);
+
+        return response()->json($this->foodporns->delete($foodporn, Auth::user()), 204);
     }
 }

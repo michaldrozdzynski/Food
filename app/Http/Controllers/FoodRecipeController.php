@@ -30,35 +30,43 @@ class FoodRecipeController extends Controller
         $data = $request->validated();
         $data['image'] = $request->file('image')->store('images/foodrecipe');
 
-        return response()->json($this->foodRecipes->store($data));
+        return response()->json($this->foodRecipes->store($data), 201);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(FoodRecipe $recipe): JsonResponse
     {
-        return response()->json($this->foodRecipes->getOne($id)); 
+        return response()->json($this->foodRecipes->getOne($recipe)); 
     }
 
-    public function good(int $id): JsonResponse
+    public function good(FoodRecipe $recipe): JsonResponse
     {
-        return response()->json($this->foodRecipes->plus($id));
+        $this->authorize('rate', $recipe);
+
+        return response()->json($this->foodRecipes->plus($recipe));
     }
 
-    public function bad(int $id): JsonResponse
+    public function bad(FoodRecipe $recipe): JsonResponse
     {
-        return response()->json($this->foodRecipes->minus($id));
+        $this->authorize('rate', $recipe);
+
+        return response()->json($this->foodRecipes->minus($recipe));
     }
 
-    public function update(StoreFoodRecipe $request, int $id): JsonResponse
+    public function update(StoreFoodRecipe $request, FoodRecipe $recipe): JsonResponse
     {
+        $this->authorize('update', $recipe);
+
         $data = $request->validated();
         $data['image'] = $request->file('image')->store('images/foodrecipe');
 
-        return response()->json($this->foodRecipes->update($data, $id));
+        return response()->json($this->foodRecipes->update($data, $recipe));
     }
 
     public function destroy(FoodRecipe $recipe): JsonResponse
     {
-        return response()->json($this->foodRecipes->delete($recipe));
+        $this->authorize('delete', $recipe);
+        
+        return response()->json($this->foodRecipes->delete($recipe), 204);
     }
 
 }
