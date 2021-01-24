@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Storage;
 
 class UserFactory extends Factory
 {
@@ -22,6 +23,9 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $imageUrl = $this->faker->image(Storage::path('public\images\avatar'), $width = 640, $height = 480, 'avatar');
+        $imgUrl = substr($imageUrl, strlen(Storage::path('')));
+
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
@@ -29,6 +33,7 @@ class UserFactory extends Factory
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'gender' => $this->faker->boolean ? 'women' : 'men',
+            'avatar' => $imgUrl,
         ];
     }
 }

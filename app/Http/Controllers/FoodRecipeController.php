@@ -28,7 +28,7 @@ class FoodRecipeController extends Controller
     public function store(StoreFoodRecipe $request): JsonResponse
     {
         $data = $request->validated();
-        $data['image'] = $request->file('image')->store('images/foodrecipe');
+        $data['image'] = $request->file('image')->store('public/images/foodrecipe');
 
         return response()->json($this->foodRecipes->store($data), 201);
     }
@@ -57,7 +57,7 @@ class FoodRecipeController extends Controller
         $this->authorize('update', $recipe);
 
         $data = $request->validated();
-        $data['image'] = $request->file('image')->store('images/foodrecipe');
+        $data['image'] = $request->file('image')->store('public/images/foodrecipe');
 
         return response()->json($this->foodRecipes->update($data, $recipe));
     }

@@ -7,6 +7,7 @@ use App\Models\Foodporn;
 use App\Models\FoodpornRate;
 use App\Models\User;
 use Storage;
+use URL;
 
 /**
  * Class FoodpornRepository
@@ -29,9 +30,11 @@ class FoodpornRepository
                 ->withUserName()
                 ->where('user_id', '!=', $user->id)
                 ->get();  
+            
 
             foreach ($foodporns as $foodporn) {
                 if (FoodpornRate::where('foodporn_id', $foodporn->id)->where('user_id', $user->id)->count() === 0) {
+                    $foodporn->image = URL::to('/') . '/storage//' . substr($foodporn->image, 7);
                     return $foodporn;
                 }
             }
@@ -41,7 +44,10 @@ class FoodpornRepository
 
     public function store(array $data)//: Foodporn
     {
-        return Foodporn::create($data);
+        $foodporn = Foodporn::create($data);
+        $foodporn->image = URL::to('/') . '/storage//' . substr($foodporn->image, 7);
+
+        return $foodporn;
     }
 
     public function plus(Foodporn $foodporn, User $user)

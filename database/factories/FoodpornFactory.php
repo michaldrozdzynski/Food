@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Foodporn;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Storage;
 
 class FoodpornFactory extends Factory
 {
@@ -24,9 +25,13 @@ class FoodpornFactory extends Factory
     {
         $user = User::InRandomOrder()->first();
 
+        $imageUrl = $this->faker->image(Storage::path('public\images\foodporn'), $width = 640, $height = 480, 'foodporn');
+        $imgUrl = substr($imageUrl, strlen(Storage::path('')));
+    
         return [
             'user_id' => $user->id,
             'name' => $this->faker->word,
+            'image' => $imgUrl,
         ];
     }
 }
