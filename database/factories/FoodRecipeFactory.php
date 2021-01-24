@@ -31,7 +31,7 @@ class FoodRecipeFactory extends Factory
 
         $country = CuisineCountry::inRandomOrder()->first();
 
-        $imageUrl = $this->faker->image(Storage::path('public\images\foodrecipe'), $width = 640, $height = 480, 'foodrecipe');
+        $imageUrl = $this->faker->image(Storage::path('public/images/foodrecipe'), $width = 640, $height = 480, 'foodrecipe');
         $imgUrl = substr($imageUrl, strlen(Storage::path('')));
 
         return [

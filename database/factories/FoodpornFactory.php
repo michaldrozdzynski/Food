@@ -25,7 +25,7 @@ class FoodpornFactory extends Factory
     {
         $user = User::InRandomOrder()->first();
 
-        $imageUrl = $this->faker->image(Storage::path('public\images\foodporn'), $width = 640, $height = 480, 'foodporn');
+        $imageUrl = $this->faker->image(Storage::path('public/images/foodporn'), $width = 640, $height = 480, 'foodporn');
         $imgUrl = substr($imageUrl, strlen(Storage::path('')));
     
         return [

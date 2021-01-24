@@ -23,7 +23,7 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $imageUrl = $this->faker->image(Storage::path('public\images\avatar'), $width = 640, $height = 480, 'avatar');
+        $imageUrl = $this->faker->image(Storage::path('public/images/avatar'), $width = 640, $height = 480, 'avatar');
         $imgUrl = substr($imageUrl, strlen(Storage::path('')));
 
         return [
