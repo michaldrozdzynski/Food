@@ -36,11 +36,12 @@ class FoodRecipeFactory extends Factory
 
         return [
             'user_id' => $user->id,
-            'name' => $this->faker->word,
+            'name' => $this->faker->sentence(),
             'category_id' => $category->id,
             'cuisine_country_id' => $country->id,
             'vegetarian' => $this->faker->boolean,
             'description' => $this->faker->text,
+            'way_of_preparing' => $this->faker->text,
             'image' => $imgUrl,
         ];
     }

@@ -36,7 +36,7 @@ class FoodRecipeRepository
             $foodRecipe = $foodRecipe->where('user_id', $data['user_id']);
         } 
         
-        $foodRecipes = $foodRecipe->get();
+        $foodRecipes = $foodRecipe->paginate(10);
 
         foreach ($foodRecipes as $recipe) {
             $recipe->image = URL::to('/') . '/storage//' . substr($recipe->image, 7);

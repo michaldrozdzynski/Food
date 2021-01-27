@@ -24,7 +24,20 @@ class UserController extends Controller
 
         $data['password'] = bcrypt($request->password);
         
-        return response()->json(User::create($data),201);
+        $user = User::create($data);
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+
+        $token->save();
+
+        return response()->json([
+            'user' => $user,
+            'access_token' => $tokenResult->accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => Carbon::parse(
+                $tokenResult->token->expires_at
+            )->toDateTimeString()
+        ], 201);
     }
 
     public function login(Request $request): JsonResponse
@@ -45,6 +58,7 @@ class UserController extends Controller
         $token->save();
 
         return response()->json([
+            'user' => $user,
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(

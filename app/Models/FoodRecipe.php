@@ -26,6 +26,7 @@ class FoodRecipe extends Model
         'cuisine_country_id',
         'vegetarian',
         'description',
+        'way_of_preparing'
     ];
 
     /**

@@ -27,4 +27,18 @@ class RegisterUser extends FormRequest
             ]
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'email.unique' => 'Your e-mail is not unique',
+            'password.confirmed' => 'Your password and confirmation password do not match.',
+            'gender.required' => 'You must choose your gender.'
+        ];
+    }
 }

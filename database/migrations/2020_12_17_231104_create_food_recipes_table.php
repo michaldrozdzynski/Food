@@ -23,6 +23,7 @@ class CreateFoodRecipesTable extends Migration
             $table->unsignedBigInteger('cuisine_country_id');
             $table->boolean('vegetarian');
             $table->text('description');
+            $table->text('way_of_preparing');
             $table->timestamps();
         });
     }
