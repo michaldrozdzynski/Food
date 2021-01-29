@@ -10,6 +10,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Auth;
 use Storage;
+use URL;
 
 class UserController extends Controller
 {
@@ -18,12 +19,25 @@ class UserController extends Controller
         $data = $request->validated();
         if (isset($data['avatar']))
         {
-            $data['avatar'] = $request->file('avatar')->store('images/avatar');
+            $data['avatar'] = $request->file('avatar')->store('/public/images/avatar');
         }
 
         $data['password'] = bcrypt($request->password);
         
-        return response()->json(User::create($data),201);
+        $user = User::create($data);
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+
+        $token->save();
+
+        return response()->json([
+            'user' => $user,
+            'access_token' => $tokenResult->accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => Carbon::parse(
+                $tokenResult->token->expires_at
+            )->toDateTimeString()
+        ], 201);
     }
 
     public function login(Request $request): JsonResponse
@@ -44,6 +58,7 @@ class UserController extends Controller
         $token->save();
 
         return response()->json([
+            'user' => $user,
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
@@ -67,7 +82,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         if (isset($data['avatar'])) {
-            $data['avatar'] = $request->file('avatar')->store('images/avatar');
+            $data['avatar'] = $request->file('avatar')->store('public/images/avatar');
 
             if (isset($user->avatar)) {
                 Storage::delete($user->avatar);
@@ -76,12 +91,15 @@ class UserController extends Controller
 
         
         $user->update($data);
-
+        $user->avatar = URL::to('/') . '/storage//' . substr($user->avatar, 7);
+        
         return response()->json($user);
     }
 
     public function show(User $user): JsonResponse
     {
+        $user->avatar = URL::to('/') . '/storage//' . substr($user->avatar, 7);
+
         return response()->json($user);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\FoodCategory;
 use App\Models\CuisineCountry;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Storage;
 
 class FoodRecipeFactory extends Factory
 {
@@ -30,13 +31,18 @@ class FoodRecipeFactory extends Factory
 
         $country = CuisineCountry::inRandomOrder()->first();
 
+        $imageUrl = $this->faker->image(Storage::path('public/images/foodrecipe'), $width = 640, $height = 480, 'foodrecipe');
+        $imgUrl = substr($imageUrl, strlen(Storage::path('')));
+
         return [
             'user_id' => $user->id,
-            'name' => $this->faker->word,
+            'name' => $this->faker->sentence(),
             'category_id' => $category->id,
             'cuisine_country_id' => $country->id,
             'vegetarian' => $this->faker->boolean,
             'description' => $this->faker->text,
+            'way_of_preparing' => $this->faker->text,
+            'image' => $imgUrl,
         ];
     }
 
