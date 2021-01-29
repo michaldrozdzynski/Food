@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'cors'])->group(function () {
     Route::get('/foodporn', 'FoodpornController@index');
     Route::post('/foodporn', 'FoodpornController@store');
     Route::patch('/foodporn/{foodporn}/good', 'FoodpornController@good');
@@ -46,7 +46,6 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/user', 'UserController@update');
 
     Route::get('/logout', 'UserController@logout');
+    Route::post('/register', 'UserController@register')->withoutMiddleware('auth:api');
+    Route::post('/login', 'UserController@login')->withoutMiddleware('auth:api');
 });
-
-Route::post('/register', 'UserController@register');
-Route::post('/login', 'UserController@login');
