@@ -22,14 +22,17 @@ Route::middleware(['auth:api', 'cors'])->group(function () {
 
     Route::get('/foodrecipe', 'FoodRecipeController@index')->withoutMiddleware('auth:api');
     Route::post('/foodrecipe', 'FoodRecipeController@store');
+    Route::get('/foodrecipe/{recipe}/check-rate', 'FoodRecipeController@checkRate');
     Route::get('/foodrecipe/{recipe}', 'FoodRecipeController@show')->withoutMiddleware('auth:api');
     Route::patch('/foodrecipe/{recipe}/good', 'FoodRecipeController@good');
     Route::patch('/foodrecipe/{recipe}/bad', 'FoodRecipeController@bad');
     Route::put('/foodrecipe/{recipe}', 'FoodRecipeController@update');
     Route::delete('/foodrecipe/{recipe}', 'FoodRecipeController@destroy');
 
+
     Route::get('/comment/{recipe}', 'CommentController@index')->withoutMiddleware('auth:api');
-    Route::post('/comment', 'CommentController@store');
+    Route::post('/comment/{recipe}', 'CommentController@store');
+    Route::get('/comment/{comment}/check-rate', 'CommentController@checkRate');
     Route::patch('/comment/{comment}/good', 'CommentController@good');
     Route::patch('/comment/{comment}/bad', 'CommentController@bad');
     Route::delete('/comment/{comment}', 'CommentController@destroy');
@@ -42,7 +45,7 @@ Route::middleware(['auth:api', 'cors'])->group(function () {
     Route::get('/foodcategory', 'CategoryAndCuisineController@getCategory')->withoutMiddleware('auth:api');
     Route::get('/cuisine-country', 'CategoryAndCuisineController@getCuisineCountry')->withoutMiddleware('auth:api');
 
-    Route::get('/user/{user}', 'UserController@show');
+    Route::get('/user/{user}', 'UserController@show')->withoutMiddleware('auth:api');
     Route::put('/user', 'UserController@update');
 
     Route::get('/logout', 'UserController@logout');

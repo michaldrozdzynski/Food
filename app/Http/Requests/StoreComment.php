@@ -14,7 +14,6 @@ class StoreComment extends FormRequest
     public function rules()
     {
         return [
-            'food_recipe_id' => 'required|integer|exists:food_recipes,id',
             'parent_id' => 'nullable|integer|exists:comments,id',
             'content' => 'required|string',
         ];

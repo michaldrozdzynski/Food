@@ -22,9 +22,19 @@ class CommentController extends Controller
         return response()->json($this->comments->get($recipe));
     }
 
-    public function store(StoreComment $request): JsonResponse
+    public function store(StoreComment $request, FoodRecipe $recipe): JsonResponse
     {
-        return $this->comments->store($request->validated());
+        return $this->comments->store($request->validated(), $recipe);
+    }
+
+    public function checkRate(Comment $comment) {
+        if ($comment->user_id === auth()->user()->id) {
+            return response()->json(false);
+        } else if ($comment->rates()->where('user_id', auth()->user()->id)->count() > 0) {
+            return (response()->json(false));
+        }   else {
+            return response()->json(true);
+        }  
     }
 
     public function good(Comment $comment): JsonResponse

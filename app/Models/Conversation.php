@@ -45,4 +45,21 @@ class Conversation extends Model
     {
         return $this->hasMany(Message::class);
     }
+
+    public function scopeWithUsers($query) {
+        return $query->addSelect([
+            'user_1_name' => function ($query) {
+                $query->select('name')
+                    ->from('users')
+                    ->whereColumn('conversations.user1_id', 'users.id')
+                    ->limit(1);
+            },
+            'user_2_name' => function ($query) {
+                $query->select('name')
+                    ->from('users')
+                    ->whereColumn('conversations.user2_id', 'users.id')
+                    ->limit(1);
+            }
+        ]);
+    }
 }

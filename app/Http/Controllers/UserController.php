@@ -91,14 +91,14 @@ class UserController extends Controller
 
         
         $user->update($data);
-        $user->avatar = URL::to('/') . '/storage//' . substr($user->avatar, 7);
+        $user->avatar = $user->avatar !== null ? URL::to('/') . '/storage//' . substr($user->avatar, 7) : null;
         
         return response()->json($user);
     }
 
     public function show(User $user): JsonResponse
     {
-        $user->avatar = URL::to('/') . '/storage//' . substr($user->avatar, 7);
+        $user->avatar = $user->avatar !== null ? URL::to('/') . '/storage//' . substr($user->avatar, 7) : null;
 
         return response()->json($user);
     }

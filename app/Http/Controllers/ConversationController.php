@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Conversation;
 use App\Http\Requests\SendMessage;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ConversationController extends Controller
 {

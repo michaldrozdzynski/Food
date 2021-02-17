@@ -55,6 +55,7 @@ class FoodRecipeRepository
             'cuisine_country_id' => $data['cuisine_country_id'],
             'vegetarian' => $data['vegetarian'],
             'description' => $data['description'],
+            'way_of_preparing' => $data['way_of_preparing']
         ];
 
         $ingredients = $data['ingredient'];
@@ -81,8 +82,10 @@ class FoodRecipeRepository
         return $recipe;
     }
 
-    public function getOne(FoodRecipe $foodRecipe)
+    public function getOne(int $id)
     {
+        $foodRecipe = FoodRecipe::withCategoryAndCuisineCountryAndUser()->find($id);
+
         $recipeIngredients = $foodRecipe->ingredients()->get(); 
 
         $foodRecipe->image = URL::to('/') . '/storage//' . substr($foodRecipe->image, 7);
@@ -134,6 +137,7 @@ class FoodRecipeRepository
             'vegetarian' => $data['vegetarian'],
             'description' => $data['description'],
             'image' => $data['image'],
+            'way_of_preparing' => $data['way_of_preparing']
         ];
 
         $foodRecipe->update($recipeData);

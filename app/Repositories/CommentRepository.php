@@ -43,10 +43,8 @@ class CommentRepository
         ];
     }
 
-    public function store(array $data)
+    public function store(array $data, FoodRecipe $foodRecipe)
     {
-        $foodRecipe = FoodRecipe::find($data['food_recipe_id']);
-
         if (isset($data['parent_id']) && $foodRecipe->comments()->find($data['parent_id']) === null) {
             return response()->json([
                 'message' => "The given data was invalid.",

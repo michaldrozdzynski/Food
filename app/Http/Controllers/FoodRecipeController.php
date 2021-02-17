@@ -33,9 +33,19 @@ class FoodRecipeController extends Controller
         return response()->json($this->foodRecipes->store($data), 201);
     }
 
-    public function show(FoodRecipe $recipe): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        return response()->json($this->foodRecipes->getOne($recipe)); 
+        return response()->json($this->foodRecipes->getOne($id)); 
+    }
+
+    public function checkRate(FoodRecipe $recipe) {
+        if ($recipe->user_id === auth()->user()->id) {
+            return response()->json(false);
+        } else if ($recipe->rates()->where('user_id', auth()->user()->id)->count() > 0) {
+            return (response()->json(false));
+        } else {
+            return response()->json(true);
+        }
     }
 
     public function good(FoodRecipe $recipe): JsonResponse

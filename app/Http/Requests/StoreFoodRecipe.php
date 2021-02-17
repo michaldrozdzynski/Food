@@ -20,6 +20,7 @@ class StoreFoodRecipe extends FormRequest
             'cuisine_country_id' => 'required|integer|exists:cuisine_countries,id',
             'vegetarian' => 'required|boolean',
             'description' => 'required|string',
+            'way_of_preparing' => 'required|string',
             'ingredient' => 'required|array',
         ];
     }

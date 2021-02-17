@@ -17,6 +17,7 @@ class ConversationRepository
     {
         return Conversation::where('user1_id', Auth::user()->id)
             ->orWhere('user2_id', Auth::user()->id)
+            ->withUsers()
             ->orderBy('updated_at', 'DESC')
             ->get();
     }
